@@ -195,6 +195,10 @@ public:
 
     void SpawnWorkerThreads();
 
+    // Headless capture must use this client's actual port after Tracy's port
+    // search (multiple plugin DLLs/processes may be listening simultaneously).
+    uint16_t GetListenPort() const { return m_listenPort.load( std::memory_order_acquire ); }
+
     static tracy_force_inline int64_t GetTime()
     {
 #ifdef TRACY_HW_TIMER
@@ -1044,6 +1048,7 @@ private:
 
     std::atomic<uint64_t> m_frameCount;
     std::atomic<bool> m_isConnected;
+    std::atomic<uint16_t> m_listenPort{ 0 };
 #ifdef TRACY_ON_DEMAND
     std::atomic<uint64_t> m_connectionId;
     std::atomic<bool> m_symbolsBusy;

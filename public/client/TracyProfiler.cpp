@@ -1838,6 +1838,8 @@ void Profiler::Worker()
         }
     }
 
+    m_listenPort.store( dataPort, std::memory_order_release );
+
 #ifndef TRACY_NO_BROADCAST
     m_broadcast = (UdpBroadcast*)tracy_malloc( sizeof( UdpBroadcast ) );
     new(m_broadcast) UdpBroadcast();
